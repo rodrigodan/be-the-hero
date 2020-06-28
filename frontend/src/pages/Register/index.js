@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {FiArrowLeft} from 'react-icons/fi';
 
 import api from '../../Services/api' 
@@ -9,21 +9,32 @@ import logoImg from '../../assets/logo.svg';
 
 
 
-export default function(){
+export default function Register(){
     const [name,setName] = useState('');
     const [email,setEmail] = useState('');
     const [whatsapp,setWhatsapp] = useState('');
     const [city,setCity] = useState('');
     const [uf,setUf] = useState('');
-    function handleRegister(e){
+
+    const history = useHistory();
+
+    async function handleRegister(e){
         e.preventDefault();
-        console.log({
+        const data = {
             name,
             email,
             whatsapp,
             city,
             uf,
-        })
+        };
+
+        try{
+            const response = await api.post('http://localhost:3333/ongs', data);
+            alert(`Seu ID de acesso: ${response.data.id}`)
+            history.push('/');
+        }catch(err){
+            alert('Erro no cadastro, tente novamente.');
+        }
     }
     return (
         <div className ="register-container">
